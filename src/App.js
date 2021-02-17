@@ -130,6 +130,17 @@ export default function App() {
     }
   }
 
+  //条件付きレンダー
+  function UserGreeting(props) {
+    return <h1>Welcome back!</h1>;
+  }
+
+  function GuestGreeting(props) {
+    return <h1>Please sign up.</h1>;
+  }
+
+  //TODO: 続き
+
   return (
     <div className="App">
       <h1>Hello CodeSandbox</h1>
