@@ -13,15 +13,48 @@ ReactDOM.render(
 );
 
 //秒刻みで動く時計
-function tick() {
-  const element = (
-    <div>
-      <h2>It is {new Date().toLocaleTimeString()}.</h2>
-    </div>
-  );
-  ReactDOM.render(element, document.getElementById("tick"));
+//stateとライフサイクル：再利用可能かつカプセル化されたものにする
+//内部処理を実装するためにはコンポーネントにstateを追加する必要がある→Class化する
+//クラスにライフサイクルメソッドを追加する→マウント、アンマウント
+class Clock extends React.Component {
+  //秒ごとに更新するという処理は、Clock の内部実装の詳細 (implementation detail) であるべき
+
+  //this.stateの初期状態を設定するクラスコンストラクタを追加する
+  constructor(props) {
+    super(props); //常に props を引数として親クラスのコンストラクタを呼び出す必要がある
+    this.state = { date: new Date() };
+  }
+
+  //マウント (mounting)：最初に Clock が DOM として描画されるとき
+  componentDidMount() {
+    this.timerID = setInterval(() => this.tick(), 1000);
+  }
+
+  //アンマウント (unmounting):Clock が生成した DOM が削除されるとき
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
+  tick() {
+    //x:this.state = ... o:this.setState()
+    this.setState({
+      date: new Date()
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
 }
 
+function tick() {
+  const element = <Clock />;
+  ReactDOM.render(element, document.getElementById("tick"));
+}
 setInterval(tick, 1000);
 
 //下記2つは等価

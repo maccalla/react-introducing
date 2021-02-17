@@ -1,4 +1,5 @@
 import "./styles.css";
+import React from "react";
 
 export default function App() {
   const name = "john ashe";
@@ -59,6 +60,76 @@ export default function App() {
   }
   //すべてのReactコンポーネントは自己のpropsに対して純関数のように振るわねばならない
 
+  //Reactのイベント処理
+  function ActionLink() {
+    function handleClick(e) {
+      e.preventDefault();
+      console.log("The link was clicked.");
+    }
+
+    return (
+      <a href="#" onClick={handleClick}>
+        Click me
+      </a>
+    );
+  }
+
+  //コンポーネントをES6のクラスとして定義した場合
+  class Toggle extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { isToggleOn: true };
+
+      //このバインディングは、コールバックで `this` を動作させるために必要です。
+      this.handleClick = this.handleClick.bind(this);
+
+      //this.handleClick へのバインドを忘れて onClick に渡した場合、実際に関数が呼ばれた時に this は undefined となってしまいます。
+      //「コールバック」は、簡単に言うと関数の引数に別の関数を指定する処理を指します。
+    }
+
+    //イベントハンドラはクラスのメソッドになる
+    handleClick() {
+      this.setState((state) => ({
+        isToggleOn: !state.isToggleOn
+      }));
+    }
+
+    render() {
+      return (
+        <button onClick={this.handleClick}>
+          {this.state.isToggleOn ? "ON" : "OFF"}
+        </button>
+      );
+    }
+  }
+
+  //bindの呼び出しを回避する方法
+  class LoggingButton extends React.Component {
+    // この構文は、`this` が handleClick 内でバインドされることを保証します。
+    // 警告: これは*実験的*な構文です。
+    //パブリッククラスフィールド構文
+    // handleClick = () => {
+    //   console.log("this is: ", this);
+    // };
+
+    // render() {
+    //   return <button onClick={this.handleClick}>Click me</button>;
+    // }
+
+    //クラスフィールド構文を使用しない場合
+    //コールバック内でアロー関数を使用する
+    handleClick() {
+      console.log("this is: ", this);
+    }
+
+    render() {
+      //イベントハンドラーに追加のパラメータを渡すとき
+      //<button onClick={(e) => this.deleteRow(id, e)}>Delete Row</button>
+      //<button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
+      return <button onClick={() => this.handleClick()}>Click me</button>;
+    }
+  }
+
   return (
     <div className="App">
       <h1>Hello CodeSandbox</h1>
@@ -70,6 +141,9 @@ export default function App() {
       <WelcomeFunc name="manG" />
       <WelcomeFunc name="manH" />
       {/* コンポーネントの抽出（分割） */}
+      <ActionLink />
+      <Toggle />
+      <LoggingButton />
     </div>
   );
 }
