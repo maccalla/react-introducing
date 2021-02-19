@@ -139,7 +139,56 @@ export default function App() {
     return <h1>Please sign up.</h1>;
   }
 
-  //TODO: 続き
+  function Greeting(props) {
+    const isLoggedIn = props.isLoggedIn;
+    if (isLoggedIn) {
+      return <UserGreeting />;
+    }
+
+    return <GuestGreeting />;
+  }
+
+  //要素変数：要素を保持しておくために変数を使うことができる
+  function LoginButton(props) {
+    return <button onClick={props.onClick}>Login</button>;
+  }
+  function LogoutButton(props) {
+    return <button onClick={props.onClick}>Logout</button>;
+  }
+
+  class LoginControl extends React.Component {
+    constructor(props) {
+      super(props);
+      this.handleLoginClick = this.handleLoginClick.bind(this);
+      this.handleLogoutClick = this.handleLogoutClick.bind(this);
+      this.state = { isLoggedIn: false };
+    }
+
+    handleLoginClick() {
+      this.setState({ isLoggedIn: true });
+    }
+
+    handleLogoutClick() {
+      this.setState({ isLoggedIn: false });
+    }
+
+    render() {
+      const isLoggedIn = this.state.isLoggedIn;
+      let button;
+      if (isLoggedIn) {
+        button = <LogoutButton onClick={this.handleLogoutClick} />;
+      } else {
+        button = <LoginButton onClick={this.handleLoginClick} />;
+      }
+
+      return (
+        <div>
+          <Greeting isLoggedIn={isLoggedIn} />
+          {button}
+        </div>
+      );
+    }
+  }
 
   return (
     <div className="App">
@@ -155,6 +204,11 @@ export default function App() {
       <ActionLink />
       <Toggle />
       <LoggingButton />
+      <Greeting isLoggedIn={false} />
+      <LoginControl />
     </div>
   );
+
+  //論理演算子によるインラインif
+  //TODO: 続き
 }
