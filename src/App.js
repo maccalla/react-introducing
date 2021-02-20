@@ -345,6 +345,82 @@ export default function App() {
     { id: 2, title: "hello Windows", content: "Welcome to Windows World!" }
   ];
 
+  //フォーム
+  //フォーム要素が保持している状態をstateで管理することで2つの状態を結合させる
+  //input
+  class NameForm extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { value: "" };
+
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(event) {
+      this.setState({ value: event.target.value });
+    }
+
+    handleSubmit(event) {
+      alert("A name was submitted: " + this.state.value);
+      event.preventDefault();
+    }
+
+    render() {
+      return (
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Name:
+            <input
+              type="text"
+              value={this.state.value}
+              onChange={this.handleChange}
+            />
+            <input type="submit" value="Submit" />
+          </label>
+        </form>
+      );
+    }
+  }
+
+  //テキストエリア
+  class EssayForm extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        value: "Please write an essay about your favorite DOM element."
+      };
+
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(event) {
+      this.setState({ value: event.target.value });
+      //console.log(event.target.value);
+    }
+
+    handleSubmit(event) {
+      alert("A name was submitted: " + this.state.value);
+      event.preventDefault();
+    }
+
+    render() {
+      return (
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Essay:
+            <textarea value={this.state.value} onChange={this.handleChange} />
+            <input type="submit" value="Submit" />
+          </label>
+        </form>
+      );
+    }
+  }
+
+  //selectタグ
+  //TODO: 続き
+
   return (
     <div className="App">
       <h1>Hello CodeSandbox</h1>
@@ -370,6 +446,8 @@ export default function App() {
       <NumberList2 numbers={numbers} />
       <Blog posts={posts} />
       <ListItem3 numbers={numbers} />
+      <NameForm />
+      <EssayForm />
     </div>
   );
 }
