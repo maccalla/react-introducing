@@ -190,6 +190,72 @@ export default function App() {
     }
   }
 
+  //論理 && 演算子によるインラインif
+  //true && expression
+  //false && expression
+  function Mailbox(props) {
+    const unreadMessages = props.unreadMessages;
+    return (
+      <div>
+        <h1>Hello!</h1>
+        {unreadMessages.length > 0 && (
+          <h2>You have {unreadMessages.length} unread messages.</h2>
+        )}
+      </div>
+    );
+  }
+  const messages = ["React", "Re:React", "Re:Re:React"];
+
+  //条件演算子によるインライン If-Else
+  //condition ? true : false
+  function InlineIfElse(props) {
+    const isLogginIn = props.isLoggedIn;
+    return (
+      <div>
+        The User id <b>{isLogginIn ? "currently" : "not"}</b> logged in.
+      </div>
+    );
+  }
+
+  function InlineIfElse2(props) {
+    const isLoggedIn = props.isLoggedIn;
+    return <div>{isLoggedIn ? <p>login true</p> : <p>login false</p>}</div>;
+  }
+
+  //コンポーネントのレンダーを防ぐ
+  function WarningBanner(props) {
+    if (!props.warn) {
+      return null;
+    }
+
+    return <div className="warning">Warning!!</div>;
+  }
+
+  class Page extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { showWarning: true };
+      this.handleToggleClick = this.handleToggleClick.bind(this);
+    }
+
+    handleToggleClick() {
+      this.setState((state) => ({
+        showWarning: !state.showWarning
+      }));
+    }
+
+    render() {
+      return (
+        <div>
+          <WarningBanner warn={this.state.showWarning} />
+          <button onClick={this.handleToggleClick}>
+            {this.state.showWarning ? "Hide" : "Show"}
+          </button>
+        </div>
+      );
+    }
+  }
+
   return (
     <div className="App">
       <h1>Hello CodeSandbox</h1>
@@ -206,9 +272,10 @@ export default function App() {
       <LoggingButton />
       <Greeting isLoggedIn={false} />
       <LoginControl />
+      <Mailbox unreadMessages={messages} />
+      <InlineIfElse isLoggedIn={false} />
+      <InlineIfElse2 isLoggedIn={true} />
+      <Page />
     </div>
   );
-
-  //論理演算子によるインラインif
-  //TODO: 続き
 }
