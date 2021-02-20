@@ -256,6 +256,95 @@ export default function App() {
     }
   }
 
+  //リストとkey
+  //リストの変換方法
+  const numbers = [1, 2, 3, 4, 5];
+  const doubled = numbers.map((number) => number * 2);
+  console.log(doubled);
+  //複数のコンポーネントをレンダーする
+  //https://qiita.com/koba04/items/a4d23245d246c53cd49d
+  const listItems = numbers.map((number) => (
+    <li key={number.toString()}>{number}</li>
+  ));
+
+  function NumberList(props) {
+    const numbers = props.numbers;
+    const listItems = numbers.map((number) => (
+      <li key={number.toString()}>{number}</li>
+    ));
+    return <ul>{listItems}</ul>;
+  }
+
+  //Key: どの要素が変更追加削除されたかをReactが識別するのに役立つ
+  //key={index}で要素のインデックスも指定できる
+
+  //keyのコンポーネントの抽出
+  //正しいkeyの使い方
+  function ListItem2(props) {
+    // 正解! ここでキーを指定する必要はありません。
+    return <li>{props.value}</li>;
+  }
+
+  function NumberList2(props) {
+    const numbers = props.numbers;
+    const listItems = numbers.map((number) => (
+      // 正解! キーは配列の中で指定する必要があります。
+      <ListItem2 key={number.toString()} value={number} />
+    ));
+    return <ul>{listItems}</ul>;
+  }
+
+  //基本ルールとしては、map() 呼び出しの中に現れる要素に key が必要です
+
+  //key は兄弟要素の中で一意であればよい（グローバルに一意である必要はない）
+  function Blog(props) {
+    const sideber = (
+      <ul>
+        {props.posts.map((post) => (
+          <li key={post.id}>{post.title}</li>
+        ))}
+      </ul>
+    );
+    function Post(post) {
+      return (
+        <div>
+          <h3>{post.title}</h3>
+          <hr />
+          <p>{post.id}</p>
+          <p>{post.content}</p>
+        </div>
+      );
+    }
+    const content = props.posts.map((post) => (
+      // keyをコンポーネントに渡したい場合は明示的に書く（props.keyは読み取れない）
+      <Post key={post.id} id={post.id} content={post.content} />
+    ));
+    return (
+      <div>
+        {sideber}
+        {content}
+      </div>
+    );
+  }
+
+  //map()をJSXに組み込む -> JSXでは任意の式を埋め込める
+  function ListItem3(props) {
+    const numbers = props.numbers;
+    // map() の中身がネストされすぎている場合は、コンポーネントに抽出する良いタイミングかもしれない
+    return (
+      <ul>
+        {numbers.map((number) => (
+          <ListItem2 key={number.toString()} value={number} />
+        ))}
+      </ul>
+    );
+  }
+
+  const posts = [
+    { id: 1, title: "hello Mac", content: "Welcome to Mac World!" },
+    { id: 2, title: "hello Windows", content: "Welcome to Windows World!" }
+  ];
+
   return (
     <div className="App">
       <h1>Hello CodeSandbox</h1>
@@ -276,6 +365,11 @@ export default function App() {
       <InlineIfElse isLoggedIn={false} />
       <InlineIfElse2 isLoggedIn={true} />
       <Page />
+      <ul>{listItems}</ul>
+      <NumberList numbers={numbers} />
+      <NumberList2 numbers={numbers} />
+      <Blog posts={posts} />
+      <ListItem3 numbers={numbers} />
     </div>
   );
 }
