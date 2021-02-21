@@ -512,6 +512,9 @@ export default function App() {
     }
   }
 
+  //stateのリフトアップ
+  //TODO: 続き
+
   return (
     <div className="App">
       <h1>Hello CodeSandbox</h1>
