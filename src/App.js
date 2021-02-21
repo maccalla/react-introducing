@@ -362,7 +362,7 @@ export default function App() {
     }
 
     handleSubmit(event) {
-      alert("A name was submitted: " + this.state.value);
+      console.log("A name was submitted: " + this.state.value);
       event.preventDefault();
     }
 
@@ -401,7 +401,7 @@ export default function App() {
     }
 
     handleSubmit(event) {
-      alert("A name was submitted: " + this.state.value);
+      console.log("A name was submitted: " + this.state.value);
       event.preventDefault();
     }
 
@@ -419,7 +419,98 @@ export default function App() {
   }
 
   //selectタグ
-  //TODO: 続き
+  class FlavorForm extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { value: "cocount" };
+
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(event) {
+      this.setState({ value: event.target.value });
+      //console.log(event.target.value);
+    }
+
+    handleSubmit(event) {
+      console.log("Your favorite flavor is: " + this.state.value);
+      event.preventDefault();
+    }
+
+    render() {
+      return (
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Pick your favorite flavor:
+            <select value={this.state.value} onChange={this.handleChange}>
+              <option value="grapefruit">Grapefruit</option>
+              <option value="lime">Lime</option>
+              <option value="coconut">Coconut</option>
+              <option value="mango">Mango</option>
+            </select>
+          </label>
+          <input type="submit" value="submit" />
+        </form>
+      );
+    }
+  }
+
+  //file inputタグ
+  //非制御コンポーネント
+
+  //例：['foo' + ++i]: i
+  //オブジェクト初期化構文は計算されたプロパティ名もサポートします。これにより、式を角かっこで囲む[]ことができ、プロパティ名として計算されて使用されます
+
+  //複数の入力の処理
+  class Reservation extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        isGoing: true,
+        numberOfGuests: 2
+      };
+
+      this.handleInputChange = this.handleInputChange.bind(this);
+    }
+
+    handleInputChange(event) {
+      const target = event.target;
+      const value = target.type === "checkbox" ? target.checked : target.value;
+      const name = target.name;
+      console.log([target, ":", value, ":", name]);
+
+      this.setState({
+        [name]: value
+      });
+    }
+
+    render() {
+      return (
+        <form>
+          <label>
+            Is Going:
+            <input
+              name="isGoing"
+              type="checkbox"
+              checked={this.state.isGoing}
+              onChange={this.handleInputChange}
+            />
+          </label>
+          <br />
+          <label>
+            Number of Guest:
+            <input
+              name="numberOfGuests"
+              type="number"
+              value={this.state.numberOfGuests}
+              onChange={this.handleInputChange}
+            />
+          </label>
+        </form>
+      );
+    }
+  }
 
   return (
     <div className="App">
@@ -448,6 +539,8 @@ export default function App() {
       <ListItem3 numbers={numbers} />
       <NameForm />
       <EssayForm />
+      <FlavorForm />
+      <Reservation />
     </div>
   );
 }
