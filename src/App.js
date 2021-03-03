@@ -513,7 +513,85 @@ export default function App() {
   }
 
   //stateのリフトアップ
-  //TODO: 続き
+  // -> 同一の変化するデータを反映する必要がある場合
+  function BoilingVerdict(props) {
+    if (props.celsius >= 100) {
+      return <p>The water would boil.</p>;
+    }
+    return <p>The water would not boil.</p>;
+  }
+
+  class Calculator extends React.Component {
+    constructor(props) {
+      super(props);
+      this.handleChange = this.handleChange.bind(this);
+      this.state = { temperature: "" };
+    }
+
+    handleChange(e) {
+      this.setState({ temperature: e.target.value });
+    }
+
+    render() {
+      const temperature = this.state.temperature;
+      return (
+        <fieldset>
+          <legend>Enter temperature in Celsius:</legend>
+          <input value={temperature} onChange={this.handleChange} />
+          <BoilingVerdict celsius={parseFloat(temperature)} />
+        </fieldset>
+      );
+    }
+  }
+  //2つ目の入力を追加する
+  const scaleNames = {
+    c: "Celsius",
+    f: "Fahrenheit"
+  };
+
+  class TemperatureInput extends React.Component {
+    constructor(props) {
+      super(props);
+      this.handleChange = this.handleChange.bind(this);
+      this.state = { temperature: "" };
+    }
+
+    handleChange(e) {
+      this.setState({ temperature: e.target.value });
+    }
+
+    render() {
+      //Before: const temperature = this.state.temperature;
+      const temperature = this.props.temperature; //後でCalculatorから渡す
+      const scale = this.props.scale;
+      return (
+        <fieldset>
+          <legend>Enter temperature in {scaleNames[scale]}:</legend>
+          <input value={temperature} onChange={this.handleChange} />
+        </fieldset>
+      );
+    }
+  }
+  //2つのフィールドを動悸する
+  //変換関数の作成
+  function toCelsius(fahrenheit) {
+    return ((fahrenheit - 32) * 5) / 9;
+  }
+  function toFahrenheit(celsius) {
+    return (celsius * 9) / 5 + 32;
+  }
+  function tryConvert(temperature, convert) {
+    const input = parseFloat(temperature);
+    if (Number.isNaN(input)) {
+      return "";
+    }
+    const output = convert(input); //引数の関数名で関数実行
+    const rounded = Math.round(output * 1000) / 1000;
+    return rounded.toString();
+  }
+  //2つの入力フィールドがお互いに同期されるように変更する
+  //TemperatureInput -> ローカルのstate削除
+  //Calculatorに移動
 
   return (
     <div className="App">
@@ -544,6 +622,9 @@ export default function App() {
       <EssayForm />
       <FlavorForm />
       <Reservation />
+      <Calculator />
+      <TemperatureInput scale="c" />
+      <TemperatureInput scale="f" />
     </div>
   );
 }
