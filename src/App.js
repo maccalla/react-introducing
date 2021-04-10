@@ -615,6 +615,9 @@ export default function App() {
   //TemperatureInput -> ローカルのstate削除
   //Calculatorに移動
 
+  //コンポジション vs 継承
+  //続き
+
   return (
     <div className="App">
       <h1>Hello CodeSandbox</h1>
@@ -646,6 +649,7 @@ export default function App() {
       <Reservation />
       {/* stateのリフトアップ */}
       <Calculator />
+      {/* コンポジション vs 継承 */}
     </div>
   );
 }
