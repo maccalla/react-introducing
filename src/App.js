@@ -514,6 +514,8 @@ export default function App() {
 
   //stateのリフトアップ
   // -> 同一の変化するデータを反映する必要がある場合
+  // React での state の共有は、state を、それを必要とするコンポーネントすべての直近の共通祖先コンポーネントに移動することによって実現します。
+  // これを “state のリフトアップ (lifting state up)” と呼びます
   function BoilingVerdict(props) {
     if (props.celsius >= 100) {
       return <p>The water would boil.</p>;
@@ -524,22 +526,41 @@ export default function App() {
   class Calculator extends React.Component {
     constructor(props) {
       super(props);
-      this.handleChange = this.handleChange.bind(this);
-      this.state = { temperature: "" };
+      //this.handleChange = this.handleChange.bind(this);
+      this.handleCelsiusChange = this.handleCelsiusChange.bind(this);
+      this.handleFahrenheitChange = this.handleFahrenheitChange.bind(this);
+      this.state = { temperature: "", scale: "" };
     }
 
-    handleChange(e) {
-      this.setState({ temperature: e.target.value });
+    handleCelsiusChange(temperature) {
+      this.setState({ scale: "c", temperature });
+    }
+
+    handleFahrenheitChange(temperature) {
+      this.setState({ scale: "f", temperature });
     }
 
     render() {
+      const scale = this.state.scale;
       const temperature = this.state.temperature;
+      const celsius =
+        scale === "f" ? tryConvert(temperature, toCelsius) : temperature;
+      const fahrenheit =
+        scale === "c" ? tryConvert(temperature, toFahrenheit) : temperature;
       return (
-        <fieldset>
-          <legend>Enter temperature in Celsius:</legend>
-          <input value={temperature} onChange={this.handleChange} />
-          <BoilingVerdict celsius={parseFloat(temperature)} />
-        </fieldset>
+        <div>
+          <TemperatureInput
+            scale="c"
+            temperature={celsius}
+            onTempertureChange={this.handleCelsiusChange}
+          />
+          <TemperatureInput
+            scale="f"
+            temperature={fahrenheit}
+            onTempertureChange={this.handleFahrenheitChange}
+          />
+          <BoilingVerdict celsius={parseFloat(celsius)} />
+        </div>
       );
     }
   }
@@ -553,11 +574,12 @@ export default function App() {
     constructor(props) {
       super(props);
       this.handleChange = this.handleChange.bind(this);
-      this.state = { temperature: "" };
+      //this.state = { temperature: "" };
     }
 
     handleChange(e) {
-      this.setState({ temperature: e.target.value });
+      //Before: this.setState({ temperature: e.target.value });
+      this.props.onTempertureChange(e.target.value);
     }
 
     render() {
@@ -622,9 +644,8 @@ export default function App() {
       <EssayForm />
       <FlavorForm />
       <Reservation />
+      {/* stateのリフトアップ */}
       <Calculator />
-      <TemperatureInput scale="c" />
-      <TemperatureInput scale="f" />
     </div>
   );
 }
