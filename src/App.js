@@ -689,6 +689,8 @@ export default function App() {
   //コンポーネント継承による階層構造が推奨されるケースはあまりない
   //コンポーネント間で非UI機能を再利用したい場合は、それを別のJavaScriptモジュールに抽出することをお勧めします。
 
+  //Reactの流儀
+
   return (
     <div className="App">
       <h1>Hello CodeSandbox</h1>
