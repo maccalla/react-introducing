@@ -616,7 +616,78 @@ export default function App() {
   //Calculatorに移動
 
   //コンポジション vs 継承
-  //続き
+  //子要素をchildrenというpropsを使い、受け取った子要素を出力できる
+  function FancyBorder(props) {
+    return (
+      <div className={"FancyBorder FancyBorder-" + props.color}>
+        {props.children}
+      </div>
+    );
+  }
+
+  function WelcomeDaialog() {
+    return (
+      <FancyBorder color="blue">
+        <h1 className="Dailog-title">Welcome</h1>
+        <p className="Dialog-message">Thank you for visiting our spacecraft!</p>
+      </FancyBorder>
+    );
+  }
+
+  //独自のpropsを作成して渡すパターン（children以外)
+  function SplitPane(props) {
+    return (
+      <div className="SplitPane">
+        <div className="Split-left">{props.left}</div>
+        <div className="Split-right">{props.right}</div>
+      </div>
+    );
+  }
+
+  function Chat() {
+    return (
+      <ul>
+        <li>
+          <p>abc: 123</p>
+        </li>
+        <li>
+          <p>abc: 123</p>
+        </li>
+        <li>
+          <p>abc: 123</p>
+        </li>
+      </ul>
+    );
+  }
+
+  function Contacts() {
+    return (
+      <div>
+        <p>Contact: 090-xxxx-xxxx</p>
+      </div>
+    );
+  }
+
+  //特化したコンポーネント
+  //WelcomeDialog は Dialog の特別なケース
+  //これをコンポジションで実現する
+  function Dialog(props) {
+    return (
+      <FancyBorder color="blue">
+        <h1 className="Dailog-title">{props.title}</h1>
+        <p className="Dialog-message">{props.message}</p>
+      </FancyBorder>
+    );
+  }
+
+  function DialogWelcome() {
+    return (
+      <Dialog title="Welcome" message="Thank you for visiting! Hello World!!" />
+    );
+  }
+
+  //コンポーネント継承による階層構造が推奨されるケースはあまりない
+  //コンポーネント間で非UI機能を再利用したい場合は、それを別のJavaScriptモジュールに抽出することをお勧めします。
 
   return (
     <div className="App">
@@ -650,6 +721,9 @@ export default function App() {
       {/* stateのリフトアップ */}
       <Calculator />
       {/* コンポジション vs 継承 */}
+      <WelcomeDaialog />
+      <SplitPane left={<Contacts />} right={<Chat />} />
+      <DialogWelcome />
     </div>
   );
 }
